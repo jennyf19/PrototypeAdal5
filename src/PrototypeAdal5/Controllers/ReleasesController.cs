@@ -20,12 +20,24 @@ namespace PrototypeAdal5.Controllers
         }
 
         // GET: Releases
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder,string currentFilter, string searchString, int? page)
         {
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
             ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
 
             var releases = from r in _context.Releases
                 select r;
@@ -54,7 +66,9 @@ namespace PrototypeAdal5.Controllers
                     releases = releases.OrderBy(r => r.ProductName);
                     break;
             }
-            return View(await releases.AsNoTracking().ToListAsync());
+
+            int pageSize = 4;
+            return View(await PaginatedList<Release>.CreateAsync(releases.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Releases/Details/5
