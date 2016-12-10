@@ -16,13 +16,45 @@ namespace PrototypeAdal5.Controllers
 
         public ReleasesController(ReleaseContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Releases
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Releases.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
+            ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            var releases = from r in _context.Releases
+                select r;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                releases =
+                    releases.Where(r => r.ProductName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    releases = releases.OrderByDescending(r => r.ProductName);
+                    break;
+                case "approval_desc":
+                    releases = releases.OrderBy(r => r.ApprovalStatus);
+                    break;
+                case "apdate_desc":
+                    releases = releases.OrderBy(r => r.ApprovedDate);
+                    break;
+                case "date_desc":
+                    releases = releases.OrderBy(r => r.SubmissionDate);
+                    break;
+                default:
+                    releases = releases.OrderBy(r => r.ProductName);
+                    break;
+            }
+            return View(await releases.AsNoTracking().ToListAsync());
         }
 
         // GET: Releases/Details/5
@@ -33,7 +65,10 @@ namespace PrototypeAdal5.Controllers
                 return NotFound();
             }
 
-            var release = await _context.Releases.SingleOrDefaultAsync(m => m.ID == id);
+            var release = await _context.Releases
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.ID == id);
+
             if (release == null)
             {
                 return NotFound();
@@ -53,7 +88,8 @@ namespace PrototypeAdal5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,ApprovalStatus,ApprovedBy,ApprovedDate,ProductName,ReleaseNotes,SubmissionDate,VersionNumber")] Release release)
+        public async Task<IActionResult> Create(
+            [Bind("ID,ApprovalStatus,ApprovedBy,ApprovedDate,ProductName,ReleaseNotes,SubmissionDate,VersionNumber")] Release release)
         {
             if (ModelState.IsValid)
             {
@@ -83,50 +119,58 @@ namespace PrototypeAdal5.Controllers
         // POST: Releases/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ApprovalStatus,ApprovedBy,ApprovedDate,ProductName,ReleaseNotes,SubmissionDate,VersionNumber")] Release release)
-        {
-            if (id != release.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(release);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReleaseExists(release.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Index");
-            }
-            return View(release);
-        }
-
-        // GET: Releases/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> EditPost(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var release = await _context.Releases.SingleOrDefaultAsync(m => m.ID == id);
+            var releaseToUpdate = await _context.Releases.SingleOrDefaultAsync(r => r.ID == id);
+
+            if (
+                await
+                    TryUpdateModelAsync<Release>(releaseToUpdate, "", r => r.ProductName, r => r.VersionNumber,
+                        r => r.ReleaseNotes, r => r.SubmissionDate, r => r.ApprovalStatus, r => r.ApprovedBy,
+                        r => r.ApprovedDate))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                                                 "Please try again later.");
+                }
+            }
+            return View(releaseToUpdate);
+        }
+
+        // GET: Releases/Delete/5
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var release = await _context.Releases
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.ID == id);
+
             if (release == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] = "Delete failed. Please try again";
             }
 
             return View(release);
@@ -137,10 +181,25 @@ namespace PrototypeAdal5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var release = await _context.Releases.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Releases.Remove(release);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            var release = await _context.Releases
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.ID == id);
+
+            if (release == null)
+            {
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                _context.Releases.Remove(release);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         private bool ReleaseExists(int id)

@@ -18,6 +18,7 @@ namespace PrototypeAdal5.Models
         public int ID { get; set; }
 
         [Required]
+        [Display(Name = "Product Name")]
         public string ProductName { get; set; }
 
         [Required]
