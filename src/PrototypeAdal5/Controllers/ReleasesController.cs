@@ -67,7 +67,7 @@ namespace PrototypeAdal5.Controllers
                     break;
             }
 
-            int pageSize = 4;
+            int pageSize = 6;
             return View(await PaginatedList<Release>.CreateAsync(releases.AsNoTracking(), page ?? 1, pageSize));
         }
 
