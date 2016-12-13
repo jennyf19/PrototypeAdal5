@@ -24,6 +24,7 @@ namespace PrototypeAdal5.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            // Example
             //ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
             ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
             ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
