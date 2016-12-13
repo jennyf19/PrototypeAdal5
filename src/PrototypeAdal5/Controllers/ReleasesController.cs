@@ -24,12 +24,18 @@ namespace PrototypeAdal5.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            //ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
             ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
             ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
-            if (searchString != null)
+            var releases = from r in _context.Releases
+                           select r;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
+                releases =
+                    releases.Where(r => r.ProductName.Contains(searchString));
                 page = 1;
             }
             else
@@ -38,15 +44,6 @@ namespace PrototypeAdal5.Controllers
             }
 
             ViewData["CurrentFilter"] = searchString;
-
-            var releases = from r in _context.Releases
-                select r;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                releases =
-                    releases.Where(r => r.ProductName.Contains(searchString));
-            }
 
             switch (sortOrder)
             {

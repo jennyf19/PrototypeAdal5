@@ -41,7 +41,6 @@ namespace PrototypeAdal5.Models
         public ApprovalStatus? ApprovalStatus { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "Enter a name less than 50 characters")]
         [Display(Name = "Approved by")]
         public string ApprovedBy { get; set; }
 
