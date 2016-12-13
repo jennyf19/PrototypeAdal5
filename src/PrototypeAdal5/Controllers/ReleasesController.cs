@@ -25,9 +25,11 @@ namespace PrototypeAdal5.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             // Example
-            //ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
-            ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
-            ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
+           // ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
+            //ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
+            //ViewData["ApproveDateSortParm"] = sortOrder.Equals("approveDate_asc") ? "approveDate_desc" : "approveDate_asc";
+            //ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
+            //ViewData["DateSortParm"] = sortOrder.Equals("date_asc") ? "date_desc" : "date_asc";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
             var releases = from r in _context.Releases
@@ -51,12 +53,12 @@ namespace PrototypeAdal5.Controllers
                 case "name_desc":
                     releases = releases.OrderByDescending(r => r.ProductName);
                     break;
-                case "approval_desc":
-                    releases = releases.OrderBy(r => r.ApprovalStatus);
-                    break;
-                case "apdate_desc":
-                    releases = releases.OrderBy(r => r.ApprovedDate);
-                    break;
+                //case "status_asc":
+                  //  releases = releases.OrderBy(r => r.ApprovalStatus);
+                    //break;
+                //case "approveDate_asc":
+                //    releases = releases.OrderBy(r => r.ApprovedDate);
+                  //  break;
                 case "date_desc":
                     releases = releases.OrderBy(r => r.SubmissionDate);
                     break;
