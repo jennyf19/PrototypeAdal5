@@ -40,7 +40,9 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "Newtonsoft.Json": "9.0.1",
+    "System.Net.Http": "4.3.0"
   },
 
   "tools": {
