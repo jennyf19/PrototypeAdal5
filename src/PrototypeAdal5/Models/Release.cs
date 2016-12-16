@@ -22,7 +22,7 @@ namespace PrototypeAdal5.Models
         public string ProductName { get; set; }
 
         [Required]
-        [RegularExpression(@"^v[1-9]{1,2}\.([0-9]{1,2}\.)([0-9]{1,3})$", ErrorMessage = "The version number must be in the following format: v0.00.00")]
+        //[RegularExpression(@"^v[1-9]{1,2}\.([0-9]{1,2}\.)([0-9]{1,3})$", ErrorMessage = "The version number must be in the following format: v0.00.00")]
         [Display(Name = "Version Number")]
         public string VersionNumber { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace PrototypeAdal5
 {
@@ -30,24 +31,42 @@ namespace PrototypeAdal5
             public bool site_admin { get; set; }
         }
 
+        [DataContract]
         public class GitHubRepoLatestRelease
         {
+            [DataMember]
             public string url { get; set; }
+            [DataMember]
             public string assets_url { get; set; }
+            [DataMember]
             public string upload_url { get; set; }
+            [DataMember]
             public string html_url { get; set; }
+            [DataMember]
             public int id { get; set; }
+            [DataMember]
             public string tag_name { get; set; }
+            [DataMember]
             public string target_commitish { get; set; }
+            [DataMember]
             public string name { get; set; }
+            [DataMember]
             public bool draft { get; set; }
+            [DataMember]
             public Author author { get; set; }
+            [DataMember]
             public bool prerelease { get; set; }
+            [DataMember]
             public string created_at { get; set; }
+            [DataMember]
             public string published_at { get; set; }
+            [DataMember]
             public List<object> assets { get; set; }
+            [DataMember]
             public string tarball_url { get; set; }
+            [DataMember]
             public string zipball_url { get; set; }
+            [DataMember]
             public string body { get; set; }
         }
     }

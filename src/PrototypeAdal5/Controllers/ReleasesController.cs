@@ -116,7 +116,8 @@ namespace PrototypeAdal5.Controllers
                 var json = await ApiRequest.GetJson(gitHubUri);
 
                 GitReleaseApi.GitHubRepoLatestRelease jsonObject = JsonConvert.DeserializeObject<GitReleaseApi.GitHubRepoLatestRelease>(json);
-                GitReleaseApi.Author jsonObject2 = JsonConvert.DeserializeObject<GitReleaseApi.Author>(json);
+
+                return Json(jsonObject.tag_name);               
             }
             catch (Exception /* ex */)
             {
