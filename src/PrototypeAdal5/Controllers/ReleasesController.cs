@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeAdal5.Data;
 using PrototypeAdal5.Models;
+using PrototypeAdal5.Models.ReleaseViewModels;
+using Newtonsoft.Json;
+using System.Text;
+using PrototypeAdal5;
 
 namespace PrototypeAdal5.Controllers
 {
     public class ReleasesController : Controller
     {
+        const string GitHubPath = "https://api.github.com/repos/jennyf19/BinaryTree/releases/latest";
         private readonly ReleaseContext _context;
 
         public ReleasesController(ReleaseContext context)
@@ -24,9 +29,12 @@ namespace PrototypeAdal5.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            //ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
-            ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
-            ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
+            // Example
+           // ViewData["StatusSortParam"] = sortOrder.Equals("status_asc") ? "status_desc" : "status_asc";
+            //ViewData["ApprovalSortParm"] = String.IsNullOrEmpty(sortOrder) ? "approval_desc" : "";
+            //ViewData["ApproveDateSortParm"] = sortOrder.Equals("approveDate_asc") ? "approveDate_desc" : "approveDate_asc";
+            //ViewData["ApproveDateSortParm"] = sortOrder == "Date" ? "apdate_desc" : "Date";
+            //ViewData["DateSortParm"] = sortOrder.Equals("date_asc") ? "date_desc" : "date_asc";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
             var releases = from r in _context.Releases
@@ -50,12 +58,12 @@ namespace PrototypeAdal5.Controllers
                 case "name_desc":
                     releases = releases.OrderByDescending(r => r.ProductName);
                     break;
-                case "approval_desc":
-                    releases = releases.OrderBy(r => r.ApprovalStatus);
-                    break;
-                case "apdate_desc":
-                    releases = releases.OrderBy(r => r.ApprovedDate);
-                    break;
+                //case "status_asc":
+                  //  releases = releases.OrderBy(r => r.ApprovalStatus);
+                    //break;
+                //case "approveDate_asc":
+                //    releases = releases.OrderBy(r => r.ApprovedDate);
+                  //  break;
                 case "date_desc":
                     releases = releases.OrderBy(r => r.SubmissionDate);
                     break;
@@ -102,6 +110,21 @@ namespace PrototypeAdal5.Controllers
         public async Task<IActionResult> Create(
             [Bind("ID,ApprovalStatus,ApprovedBy,ApprovedDate,ProductName,ReleaseNotes,SubmissionDate,VersionNumber")] Release release)
         {
+            try
+            {
+                var gitHubUri = new Uri(GitHubPath);
+                var json = await ApiRequest.GetJson(gitHubUri);
+
+                GitReleaseApi.GitHubRepoLatestRelease jsonObject = JsonConvert.DeserializeObject<GitReleaseApi.GitHubRepoLatestRelease>(json);
+
+                return Json(jsonObject.tag_name);               
+            }
+            catch (Exception /* ex */)
+            {
+                //Log the error
+                ModelState.AddModelError("", "Unable to access the GitHub api. " +
+                                             "Please try again later.");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(release);

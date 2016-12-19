@@ -1,0 +1,63 @@
+@model PrototypeAdal5.Models.Release
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Submission details</h2>
+
+<div>
+    <h4>Releases</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.VersionNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.VersionNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReleaseNotes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReleaseNotes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubmissionDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubmissionDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApprovalStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApprovalStatus)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApprovedBy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApprovedBy)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApprovedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApprovedDate)
+        </dd>
+        <dd>
+            <a asp-action="Index">Publish</a>          
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

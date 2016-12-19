@@ -1,0 +1,111 @@
+@model PrototypeAdal5.Models.Release
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create a release</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Release</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="ProductName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="ProductName">
+                    <option value="BinaryTree">BinaryTree</option>
+                    <!--<option value="Adal-v4">Adal-v4</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Android-Convergence">Azure-ActiveDirectory-Library-For-Android-Convergence</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Dotnet-v2">Azure-ActiveDirectory-Library-For-Dotnet-v2</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Dotnet-v3">Azure-ActiveDirectory-Library-For-Dotnet-v3</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Java">Azure-ActiveDirectory-Library-For-Java</option>
+                    <option value="Azure-ActiveDirectory-Library-For-JS-Dev">Azure-ActiveDirectory-Library-For-JS-Dev</option>
+                    <option value="Azure-ActiveDirectory-Library-For-JS-Master">Azure-ActiveDirectory-Library-For-JS-Master</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Nodejs-Dev">Azure-ActiveDirectory-Library-For-Nodejs-Dev</option>
+                    <option value="Azure-ActiveDirectory-Library-For-Objc-Dev">Azure-ActiveDirectory-Library-For-Objc-Dev</option>
+                    <option value="Build-Android-Master">Build-Android-Master</option>
+                    <option value="Gradle-Build-Android-Master">Gradle-Build-Android-Master</option>
+                    <option value="Msal-Dotnet">Msal-Dotnet</option>
+                    <option value="NativeADAL">NativeADAL</option>
+                    <option value="Wilson-For-Dotnet45-Dev">Wilson-For-Dotnet45-Dev</option>
+                    <option value="Wilson-For-Dotnet45-Release">Wilson-For-Dotnet45-Release</option>
+                    <option value="Wilson-For-KDev">Wilson-For-KDev</option>
+                    <option value="Wilson-For-KMaster">Wilson-For-KMaster</option>
+                    <option value="Wilson-For-KRelease">Wilson-For-KRelease</option>
+
+                        </div>
+        </div>
+                <!--<div class="form-group">
+                    <label asp-for="VersionNumber" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="VersionNumber" class="form-control" />
+                        <span asp-validation-for="VersionNumber" class="text-danger"></span>
+                    </div>-->
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-validation-for="VersionNumber" class="col-md-2 container-fluid"></label>
+                <div class="col-md-10">
+                    <span asp-validation-for="VersionNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ReleaseNotes" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea asp-for="ReleaseNotes" class="text"></textarea>
+                    <span asp-validation-for="ReleaseNotes" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubmissionDate" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="SubmissionDate" class="form-control" />
+                    <span asp-validation-for="SubmissionDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovalStatus" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="ApprovalStatus">
+                        <option value="Approved">Approved</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Denied">Denied</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedDate" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="ApprovedDate" class="form-control" />
+                    <span asp-validation-for="ApprovedDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedBy" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="ApprovedBy">
+                        <option value="Rich">Rich</option>
+                        <option value="Aashima">Aashima</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
